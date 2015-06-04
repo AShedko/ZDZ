@@ -34,7 +34,7 @@ char getch(){
     return buf;
  }
 
-// Sorting subroutine;
+// Sorting subroutines;
 void sort(vector <int>* vec,int l,int r){
     int i,j,swp,pivot;
     if (r>0){                                 //checking for empty vector
@@ -66,6 +66,16 @@ void sort(vector <int>* vec,int l,int r){
     }
 }
 
+void showVec(vector <int>* vec){
+    for (int i=0;i<(int)vec->size();i++){
+        cout<<(*vec)[i]<<" ";
+        if (i%10==0 && i)
+            cout<<"\n";
+    }
+    cout<<"\nPress enter to continue\n";
+    getch();
+}
+
 void qsort(vector <int>* vec){
     sort(vec,0,vec->size()-1);
 }
@@ -82,9 +92,9 @@ int main()
         cout << "Integer number sequence quicksorting enviroment.\n"
                 "-------------------------------------------------------------------------\n"
                 "Input action: 1- add element to vector, 2- clear vector, 3- qsort vector\n"
-                " 4- show vector,5- erase element on nth position, 6- store vector to file\n"
-                " 7- append vector from file, 8- exit program.\n";
-        cin >> a;
+                "4- show vector,5- erase element on nth position, 6- store vector to file\n"
+                "7- append vector from file, 8- exit program.\n";
+        a=getch();
         switch (a){
         case '1':{                           //Pseudo-menu (self-explainatory)
             cout << "Input element\n";
@@ -100,7 +110,6 @@ int main()
             }
             else {
                 vec.push_back(inp);
-                getch();
             }
             break;
         }
@@ -112,19 +121,13 @@ int main()
             time = clock();
             qsort(&vec);
             time = clock()-time;
-            printf ("Sorting time: %d clicks (%f seconds).\n",time,((float)time)/CLOCKS_PER_SEC);
+            printf ("Sorting time: %d clicks (%f seconds).\n",(int)time,((float)time)/CLOCKS_PER_SEC);
             cout<<"\nPress enter to continue\n";
             getch();
             break;
         }
         case '4':{
-            for (int i=0;i<(int)vec.size();i++){
-                cout<<vec[i]<<" ";
-                if (i%10==0 && i)
-                    cout<<"\n";
-            }
-            cout<<"\nPress enter to continue\n";
-            getch();
+            showVec(&vec);
             break;
         }
         case '5':{
@@ -140,8 +143,11 @@ int main()
             cout <<"Input name of the output file\n";
             cin >> fileName;
             outFile.open(fileName.c_str(),ios_base::trunc); // Clears the file before writing
-            if (!outFile)
+            if (!outFile){
                 cout<<"IO Error!!!\n";
+                getch();
+                break;
+            }
             else{
                 for (int i=0;i<(int)vec.size();i++){
                     outFile<<vec[i]<<" ";
@@ -155,12 +161,14 @@ int main()
         }
         case '7':{
             ifstream inputFile;
-
             cout <<"Input name of the file \n";
             cin >> fileName;
             inputFile.open((fileName).c_str());   //open method has a cstring argument
-            if (!inputFile)
+            if (!inputFile){
                 cout <<"IO error!\n";
+                getch();
+                break;
+            }
             else{
                 while (inputFile >> inpStr){
                     inp=strtol(inpStr.c_str(),0,10);
@@ -174,7 +182,6 @@ int main()
                     }
                     else {
                         vec.push_back(inp);
-                        getch();
                     }
                 }
             inputFile.close();
@@ -187,6 +194,7 @@ int main()
         }
         default:{
             cout << "Input error, Please try again.\n";
+            getch();
             break;
         }
         }
